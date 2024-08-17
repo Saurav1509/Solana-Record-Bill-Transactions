@@ -13,6 +13,7 @@ export async function validate( reference: PublicKey, totalAmount:string, owner:
 
     paymentStatus = 'pending'
 
+    //@ts-ignore
     const { signature } = await new Promise((resolve, reject) => {
         /**
          * Retry until we find the transaction
