@@ -1,5 +1,5 @@
-import DashboardFeature from '@/components/dashboard/dashboard-feature';
+import BillTxFeature from '@/components/billTx/billTx-feature';
 
 export default function Page() {
-  return <DashboardFeature />;
+  return <BillTxFeature />;
 }

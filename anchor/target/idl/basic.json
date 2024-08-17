@@ -8,10 +8,212 @@
   },
   "instructions": [
     {
-      "name": "greet",
-      "discriminator": [203, 194, 3, 150, 228, 58, 181, 62],
-      "accounts": [],
-      "args": []
+      "name": "create_bill",
+      "discriminator": [
+        28,
+        241,
+        180,
+        161,
+        109,
+        255,
+        220,
+        44
+      ],
+      "accounts": [
+        {
+          "name": "bill",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "bill_ref_id"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "total_amount",
+          "type": "string"
+        },
+        {
+          "name": "items",
+          "type": {
+            "vec": "string"
+          }
+        },
+        {
+          "name": "is_payment_done",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "delete_bill",
+      "discriminator": [
+        248,
+        3,
+        9,
+        2,
+        60,
+        121,
+        177,
+        132
+      ],
+      "accounts": [
+        {
+          "name": "bill",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "total_amount",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "update_bill",
+      "discriminator": [
+        130,
+        253,
+        154,
+        215,
+        162,
+        144,
+        146,
+        168
+      ],
+      "accounts": [
+        {
+          "name": "bill",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "bill_ref_id"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "total_amount",
+          "type": "string"
+        },
+        {
+          "name": "items",
+          "type": {
+            "vec": "string"
+          }
+        },
+        {
+          "name": "is_payment_done",
+          "type": "bool"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "BillingState",
+      "discriminator": [
+        194,
+        150,
+        12,
+        133,
+        6,
+        55,
+        116,
+        23
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "ListOfItemsTooLong",
+      "msg": "Too many Items"
+    },
+    {
+      "code": 6001,
+      "name": "TotalAmountTooLong",
+      "msg": "Amount Of Bill Too long"
+    }
+  ],
+  "types": [
+    {
+      "name": "BillingState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "bill_ref_id",
+            "type": "string"
+          },
+          {
+            "name": "total_amount",
+            "type": "string"
+          },
+          {
+            "name": "items",
+            "type": {
+              "vec": "string"
+            }
+          },
+          {
+            "name": "is_payment_done",
+            "type": "bool"
+          },
+          {
+            "name": "paid_by",
+            "type": "pubkey"
+          }
+        ]
+      }
     }
   ]
 }
