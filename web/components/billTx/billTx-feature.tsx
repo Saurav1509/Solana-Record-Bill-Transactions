@@ -15,7 +15,7 @@ export default function BillTxFeature() {
     <div>
       <AppHero
         title="Bill Transactions"
-        subtitle={'Run the program by clicking the "Run program" button.'}
+        subtitle={'Create a Bill by entering Bill Id, Amount, and Items. Once created, anyone can pay for the bill to the owner of the bill using the qr code. Once paid using QR click the Check Payment status button to check the payment.'}
       >
         <p className="mb-6">
           <ExplorerLink

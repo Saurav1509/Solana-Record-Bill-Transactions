@@ -49,19 +49,27 @@ export function QRCode({billRefId, totalAmount, account, owner}: {billRefId: str
 
   return <div>
     <div ref={ref}></div>
-      <button onClick={() => {
+      <button className="btn btn-xs lg:btn-md btn-outline" onClick={() => {
           setQrToggle(!qrToggle);
         }}>
-        {qrToggle?<>Hide QR</>:<>Show QR</>}
+        {qrToggle?(
+          <>Hide QR</>
+          ):(
+          <>Show QR</>
+          )}
       </button>
-      <button onClick={async () => {
+      <button className="btn btn-xs lg:btn-md btn-outline" onClick={async () => {
             const {paymentStatus} = await validate(reference!, totalAmount, accountQuery.data!.owner)
             setStatus(paymentStatus);
             if(paymentStatus === 'validated') {
               updateBill.mutateAsync({billRefId, totalAmount, items: accountQuery.data!.items, isPaymentDone: true})
             }
       }}>check payment status</button>
-      {status=='validated'?<>✅ payment done</>: <>payment pending</>}
+      {status=='validated'?(
+          <>✅ payment done</>
+        ):(
+          <></>
+        )}
   </div>
 }
 
