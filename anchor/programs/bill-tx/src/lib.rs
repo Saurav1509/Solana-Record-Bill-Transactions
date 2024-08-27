@@ -51,7 +51,7 @@ pub mod bill_tx {
 
     pub fn delete_bill(
         _ctx: Context<DeleteBill>,
-        bill_ref_id: String,
+        _bill_ref_id: String,
         total_amount: String
     ) -> Result<()> {
         msg!("The Bill of Amount {} has been Deleted", total_amount);

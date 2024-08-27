@@ -8,44 +8,90 @@ import { ExplorerLink } from '../cluster/cluster-ui';
 import { ellipsify } from '../ui/ui-layout';
 import { paymentURL } from '../../solana-pay/paymentUrl';
 import { QRCode } from '../qrCode/qrCode';
+import { ItemsTable } from '../ui/ItemsTable';
 
 export function BillTxCreate() {
   const { createBill } = useBillTxProgram();
   const [billRefId, setBillRefId] = useState("");
-  const [totalAmount, setTotalAmount] = useState("");
+  const [totalAmount, setTotalAmount] = useState("0");
   const [item, setItem] = useState("");
   const [items, setItems] = useState([""]);
+  const [itemPrice, setItemPrice] = useState(0)
+  const [itemPrices, setItemPrices] = useState([0]);
   const [isPaymentDone, setIsPaymentDone] = useState(false);
 
   return (
-    <div className='p-3'>
-      <input className='w-full' placeholder='enter billRefId' onChange={e => setBillRefId(e.target.value)} />
-      <input className='w-full' placeholder='enter totalAmount' onChange={e => setTotalAmount(e.target.value)} />
-      <input placeholder='enter items' onChange={e => setItem(e.target.value)} />
-      <button
-      className="btn btn-xs lg:btn-md btn-primary"
-      onClick={() => {
-        if(items[0] == "") {
-          setItems(previous => [...previous, item])
-          items.shift();
-        }else {
-          setItems(previous => [...previous, item])
-        }
-      }}
-      >add item</button>
-      {items.map((item, index) => {
+    <div className='p-3 flex flex-col'>
+      <div className='justify-center flex-row'>
+      <input className='input input-bordered w-full max-w-xs' placeholder='enter billRefId' onChange={e => setBillRefId(e.target.value)} />
+      
+      <div className='flex flex-row justify-center'>
+        <input className='input input-bordered w-full max-w-xs m-5' 
+          placeholder='enter items' 
+          value={item}
+          onChange={e => setItem(e.target.value)} 
+        />
+        <div className='flex'>
+          <div className='flex-col justify-center pt-6 text-lg'>Rs. </div>
+          <input className='input input-bordered input-primary w-full max-w-xs m-5' 
+            placeholder='enter items price' 
+            type='number'
+            value={itemPrice}
+            onChange={e => {
+              const value = Number(e.target.value);
+              setItemPrice(value)
+            }} />
+          </div>
+        <button
+        className="btn btn-xs lg:btn-md btn-primary m-5"
+        onClick={() => {
+          if(items[0] == "") {
+            setItems(previous => [...previous, item])
+            setItemPrices(previous => [...previous, itemPrice])
+            items.shift();
+            itemPrices.shift();
+
+            setTotalAmount((Number(totalAmount) + itemPrice).toString())
+            console.log(`total amount is ${totalAmount}`)
+            setItem("")
+            setItemPrice(0)
+          }else {
+            setItems(previous => [...previous, item])
+            setItemPrices(previous => [...previous, itemPrice])
+
+            setTotalAmount((Number(totalAmount) + itemPrice).toString())
+            console.log(`total amount is ${totalAmount}`)
+            setItem("")
+            setItemPrice(0)
+          }
+        }}
+        >add item</button>
+      </div>
+      {/* {items.map((item, index) => {
         return (
           <ol key={index} className='flex justify-around p-1'>
-            <li>{item}</li>
-            <button 
-              className="btn btn-xs lg:btn-md btn-primary flex content-around"
-              onClick={() => {
-                setItems(items.filter((_, i) => i !== index));
-              }}
-            >x</button>
+            {items[0]!==""?
+              (<li>{item}, {itemPrices[index]}</li>):
+                <></>}
+            {items[0]!==""?
+              (<button 
+                className="btn btn-xs lg:btn-md btn-primary flex content-around"
+                onClick={() => {
+                  setItems(items.filter((_, i) => i !== index));
+                }}
+              >x</button>):
+              (<></>)
+            }
           </ol>
         )
-      })}
+      })} */}
+      <ItemsTable items={items} itemPrices={itemPrices} setItems={setItems} setItemPrices={setItemPrices} setTotalAmount={setTotalAmount} totalAmount={totalAmount} />
+      <div className="stats shadow flex mb-5">
+        <div className="stat">
+          <div className="stat-title">Total Bill Amount</div>
+          <div className="stat-value text-primary">RS. {totalAmount}</div>
+        </div>
+      </div>
       <button
         className="btn btn-xs lg:btn-md btn-primary"
         onClick={() => createBill.mutateAsync({billRefId, totalAmount, items, isPaymentDone})}
@@ -53,6 +99,7 @@ export function BillTxCreate() {
       >
         Create Bill{createBill.isPending && '...'}
       </button>
+      </div>
     </div>
   );
 }
