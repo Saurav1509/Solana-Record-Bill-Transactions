@@ -2,13 +2,14 @@
 
 import { PublicKey } from '@solana/web3.js';
 import { useBillTxProgram, useBillTxProgramAccount } from './billTx-data-access';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { ExplorerLink } from '../cluster/cluster-ui';
 import { ellipsify } from '../ui/ui-layout';
 import { paymentURL } from '../../solana-pay/paymentUrl';
 import { QRCode } from '../qrCode/qrCode';
 import { ItemsTable } from '../ui/ItemsTable';
+import { SearchBar } from '../ui/searchBar';
 
 export function BillTxCreate() {
   const { createBill } = useBillTxProgram();
@@ -20,16 +21,52 @@ export function BillTxCreate() {
   const [itemPrices, setItemPrices] = useState([0]);
   const [isPaymentDone, setIsPaymentDone] = useState(false);
 
+  const handleBillRefIdChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setBillRefId(e.target.value);
+  }
+
+  const handleItemChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setItem(e.target.value)
+  }
+
+  const handleItemPriceChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setItemPrice(value)
+  }
+
+  const handleAddItem = () => {
+    if(items[0] == "") {
+      setItems(previous => [...previous, item])
+      setItemPrices(previous => [...previous, itemPrice])
+      items.shift();
+      itemPrices.shift();
+
+      setTotalAmount((Number(totalAmount) + itemPrice).toString())
+      console.log(`total amount is ${totalAmount}`)
+      setItem("")
+      setItemPrice(0)
+    }else {
+      setItems(previous => [...previous, item])
+      setItemPrices(previous => [...previous, itemPrice])
+
+      setTotalAmount((Number(totalAmount) + itemPrice).toString())
+      console.log(`total amount is ${totalAmount}`)
+      setItem("")
+      setItemPrice(0)
+    }
+  }
+  
+
   return (
     <div className='p-3 flex flex-col'>
       <div className='justify-center flex-row'>
-      <input className='input input-bordered w-full max-w-xs' placeholder='enter billRefId' onChange={e => setBillRefId(e.target.value)} />
+      <input className='input input-bordered w-full max-w-xs' placeholder='enter billRefId' onChange={handleBillRefIdChange} />
       
       <div className='flex flex-row justify-center'>
         <input className='input input-bordered w-full max-w-xs m-5' 
           placeholder='enter items' 
           value={item}
-          onChange={e => setItem(e.target.value)} 
+          onChange={handleItemChange} 
         />
         <div className='flex'>
           <div className='flex-col justify-center pt-6 text-lg'>Rs. </div>
@@ -37,34 +74,11 @@ export function BillTxCreate() {
             placeholder='enter items price' 
             type='number'
             value={itemPrice}
-            onChange={e => {
-              const value = Number(e.target.value);
-              setItemPrice(value)
-            }} />
+            onChange={handleItemPriceChange} />
           </div>
         <button
         className="btn btn-xs lg:btn-md btn-primary m-5"
-        onClick={() => {
-          if(items[0] == "") {
-            setItems(previous => [...previous, item])
-            setItemPrices(previous => [...previous, itemPrice])
-            items.shift();
-            itemPrices.shift();
-
-            setTotalAmount((Number(totalAmount) + itemPrice).toString())
-            console.log(`total amount is ${totalAmount}`)
-            setItem("")
-            setItemPrice(0)
-          }else {
-            setItems(previous => [...previous, item])
-            setItemPrices(previous => [...previous, itemPrice])
-
-            setTotalAmount((Number(totalAmount) + itemPrice).toString())
-            console.log(`total amount is ${totalAmount}`)
-            setItem("")
-            setItemPrice(0)
-          }
-        }}
+        onClick={handleAddItem}
         >add item</button>
       </div>
       {/* {items.map((item, index) => {
@@ -107,6 +121,8 @@ export function BillTxCreate() {
 export function BillTxList() {
   const { accounts, getProgramAccount } = useBillTxProgram();
 
+  const [searchBill, setSearchBill] = useState("")
+
   if (getProgramAccount.isLoading) {
     return <span className="loading loading-spinner loading-lg"></span>;
   }
@@ -122,6 +138,7 @@ export function BillTxList() {
   }
   return (
     <div className={'space-y-6'}>
+      {/* <SearchBar searchBill={searchBill} setSearchBill={setSearchBill} /> */}
       {accounts.isLoading ? (
         <span className="loading loading-spinner loading-lg"></span>
       ) : accounts.data?.length ? (
@@ -131,6 +148,7 @@ export function BillTxList() {
               key={account.publicKey.toString()}
               account={account.publicKey}
             />
+            // <></>
           ))}
         </div>
       ) : (
@@ -194,21 +212,6 @@ async function BillTxCard({ account }: { account: PublicKey }) {
             )
           })}</p>
           <p>Payment Status: {accountQuery.data?.isPaymentDone?<>Yes</>:<>No</>}</p>
-          <div className="card-actions justify-around">
-            <textarea 
-              placeholder='Update total Amount here'
-              value={totalAmount}
-              onChange={e => setTotalAmount(e.target.value)}
-              className='textarea textarea-bordered w-full max-w-xs'
-            />
-            <button
-              className="btn btn-xs lg:btn-md btn-outline"
-              onClick={handleSubmit}
-              disabled={updateBill.isPending || !isFormValid}
-            >
-              Update Total Amount {updateBill.isPending && "..."}
-            </button>
-          </div>
           <div className="text-center space-y-4">
             <p>
               <ExplorerLink
