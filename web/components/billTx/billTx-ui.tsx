@@ -10,6 +10,7 @@ import { paymentURL } from '../../solana-pay/paymentUrl';
 import { QRCode } from '../qrCode/qrCode';
 import { ItemsTable } from '../ui/ItemsTable';
 import { SearchBar } from '../ui/searchBar';
+import { ViewOnlyItemsTable } from '../ui/ViewOnlyItemsTable';
 
 export function BillTxCreate() {
   const { createBill } = useBillTxProgram();
@@ -204,13 +205,7 @@ async function BillTxCard({ account }: { account: PublicKey }) {
             <p>Bill Id: {accountQuery.data?.billRefId}</p>
           </h2>
           <p>Total Amount: {accountQuery.data?.totalAmount}</p>
-          <p>Items: {accountQuery.data?.items.map((item,index) => {
-            return (
-                <ol key={index} className='flex justify-around p-1'>
-                  <li>{item}</li>
-                </ol>
-            )
-          })}</p>
+          <ViewOnlyItemsTable items={accountQuery.data?.items}/>
           <p>Payment Status: {accountQuery.data?.isPaymentDone?<>Yes</>:<>No</>}</p>
           <div className="text-center space-y-4">
             <p>
