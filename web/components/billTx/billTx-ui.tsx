@@ -122,8 +122,6 @@ export function BillTxCreate() {
 export function BillTxList() {
   const { accounts, getProgramAccount } = useBillTxProgram();
 
-  const [searchBill, setSearchBill] = useState("")
-
   if (getProgramAccount.isLoading) {
     return <span className="loading loading-spinner loading-lg"></span>;
   }
@@ -139,7 +137,6 @@ export function BillTxList() {
   }
   return (
     <div className={'space-y-6'}>
-      {/* <SearchBar searchBill={searchBill} setSearchBill={setSearchBill} /> */}
       {accounts.isLoading ? (
         <span className="loading loading-spinner loading-lg"></span>
       ) : accounts.data?.length ? (

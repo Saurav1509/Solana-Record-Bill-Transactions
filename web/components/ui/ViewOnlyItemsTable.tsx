@@ -13,7 +13,7 @@ export function ViewOnlyItemsTable({items}: {items: string[]|undefined}) {
         {items?.map((item,index)=> {
             return (
                 <tr key={index}>
-                    <th>{index}</th>
+                    <th>{index+1}</th>
                     <td>{item}</td>
                 </tr>
             )
