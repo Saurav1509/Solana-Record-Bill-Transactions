@@ -1,5 +1,5 @@
-import { FindBillRecord } from '@/components/billTx/find-bill-record';
+import BillTxFeature from '@/components/billTx/billTx-feature';
 
 export default function Page() {
-  return <FindBillRecord />;
+  return <BillTxFeature />;
 }
