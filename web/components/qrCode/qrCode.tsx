@@ -71,7 +71,7 @@ export function QRCode({billRefId, totalAmount, account, owner}: {billRefId: str
   
 
   return <div>
-    <div ref={ref}></div>
+    {/* <div ref={ref}></div>
       <button className="btn btn-xs lg:btn-md btn-outline" onClick={() => {
           setQrToggle(!qrToggle);
         }}>
@@ -96,7 +96,7 @@ export function QRCode({billRefId, totalAmount, account, owner}: {billRefId: str
               // @ts-expect-error error of ts for daisy ui
               document?.getElementById('qr_code_modal')?.close();
             }
-      }}>check payment status</button>
+      }}>check payment status</button> */}
       {status=='validated'?(
           <>✅ payment done</>
         ):(
