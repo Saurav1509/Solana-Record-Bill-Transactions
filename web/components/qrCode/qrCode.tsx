@@ -124,7 +124,7 @@ export function QRCode({billRefId, totalAmount, account, owner}: {billRefId: str
               // @ts-expect-error error of ts for daisy ui
               document?.getElementById('qr_code_modal')?.close();
             }
-          }}>open modal</button>
+          }}>Solana Pay QR</button>
           <dialog id="qr_code_modal" className="modal">
             <div className="modal-box">
               <h3 className="font-bold text-lg">QR Code for Payment</h3>
