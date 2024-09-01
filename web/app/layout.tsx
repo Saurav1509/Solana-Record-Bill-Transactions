@@ -3,6 +3,7 @@ import { UiLayout } from '@/components/ui/ui-layout';
 import { ClusterProvider } from '@/components/cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ReactQueryProvider } from './react-query-provider';
+import { Provider } from './sessionProvider';
 
 export const metadata = {
   title: 'record-bill-tx',
@@ -26,7 +27,9 @@ export default function RootLayout({
         <ReactQueryProvider>
           <ClusterProvider>
             <SolanaProvider>
-              <UiLayout links={links}>{children}</UiLayout>
+              <Provider>
+                <UiLayout links={links}>{children}</UiLayout>
+              </Provider>
             </SolanaProvider>
           </ClusterProvider>
         </ReactQueryProvider>

@@ -16,10 +16,10 @@ export function ItemsTable({
         totalAmount: string
 }) {
     return <div className="overflow-x-auto">
-    <table className="table table-xs table-pin-rows table-pin-cols">
+    <table className="table bg-transparent font-bold text-xl">
         <thead>
         <tr className="text-center">
-            <th></th>
+            <th className="text-right"></th>
             <td>Name</td>
             <td>Price</td>
             <th></th>
@@ -30,23 +30,27 @@ export function ItemsTable({
             return(
                 <tr key={index} className="text-center">
                     {items[0]!==""?
-                        (<><th>{index +1}</th>
-                        <td>{item}</td>
-                        <td>{itemPrices[index]}</td></>):
-                        <></>
+                        (
+                            <>
+                                <th className="text-right">{index +1}</th>
+                                <td>{item}</td>
+                                <td>{itemPrices[index]}</td>
+                            </>
+                        ):
+                            <></>
                     }
-                    <th>
-                    {items[0]!==""?
-                        (<button 
-                            className="btn btn-xs lg:btn-md btn-primary flex content-around"
-                            onClick={() => {
-                            setItems(items.filter((_, i) => i !== index));
-                            setTotalAmount((Number(totalAmount) - itemPrices[index]).toString())
-                            setItemPrices(itemPrices.filter((_, i) => i !== index));
-                            }}
-                        >x</button>):
-                        (<></>)
-                    }
+                    <th className="flex justify-center">
+                        {items[0]!==""?
+                            (<button 
+                                className="btn btn-xs lg:btn-md btn-primary flex content-around"
+                                onClick={() => {
+                                setItems(items.filter((_, i) => i !== index));
+                                setTotalAmount((Number(totalAmount) - itemPrices[index]).toString())
+                                setItemPrices(itemPrices.filter((_, i) => i !== index));
+                                }}
+                            >x</button>):
+                            (<></>)
+                        }
                     </th>
                 </tr>
             )

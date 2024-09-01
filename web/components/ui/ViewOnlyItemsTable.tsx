@@ -1,6 +1,6 @@
 export function ViewOnlyItemsTable({items}: {items: string[]|undefined}) {
     return <div className="overflow-x-auto">
-    <table className="table">
+    <table className="table font-bold text-xl">
       {/* head */}
       <thead>
         <tr>

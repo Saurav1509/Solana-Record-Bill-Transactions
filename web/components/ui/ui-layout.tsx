@@ -3,6 +3,7 @@
 import { WalletButton } from '../solana/solana-provider';
 import * as React from 'react';
 import { ReactNode, Suspense, useEffect, useRef } from 'react';
+import { signIn, signOut, useSession } from "next-auth/react"
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -23,10 +24,11 @@ export function UiLayout({
   links: { label: string; path: string }[];
 }) {
   const pathname = usePathname();
+  const session = useSession();
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-r from-slate-700 to-green-900">
-      <div className="navbar bg-base-300 text-neutral-content flex-col md:flex-row space-y-2 md:space-y-0 justify-between px-48">
+      <div className="navbar text-neutral-content flex-col md:flex-row space-y-2 md:space-y-0 justify-between px-48 pt-6">
         <div className="flex-1">
           <Link className="btn btn-ghost normal-case text-xl" href="/">
             <img className="h-10 md:h-10" alt="Logo" src="/290.jpg" />
@@ -48,7 +50,8 @@ export function UiLayout({
         <div className="flex-none space-x-2">
           <WalletButton />
           <ClusterUiSelect />
-          <button className="btn btn-secondary">Sign In</button>
+          {session.data?.user && <button className="btn btn-secondary" onClick={() => { signOut() }}>Log Out</button>}
+          {!session.data?.user && <button className="btn btn-secondary" onClick={() => { signIn() }}>Sign In</button>}
         </div>
       </div>
       <ClusterChecker>

@@ -70,7 +70,7 @@ export function BillTxCreate() {
           onChange={handleItemChange} 
         />
         <div className='flex'>
-          <div className='flex-col justify-center pt-6 text-lg'>Rs. </div>
+          <div className='flex-col justify-center pt-6 text-lg'>$</div>
           <input className='input input-bordered input-primary w-full max-w-xs m-5' 
             placeholder='enter items price' 
             type='number'
@@ -101,7 +101,7 @@ export function BillTxCreate() {
         )
       })} */}
       <ItemsTable items={items} itemPrices={itemPrices} setItems={setItems} setItemPrices={setItemPrices} setTotalAmount={setTotalAmount} totalAmount={totalAmount} />
-      <div className="stats shadow flex mb-5">
+      <div className="stats flex mb-5 bg-transparent">
         <div className="stat">
           <div className="stat-title">Total Bill Amount</div>
           <div className="stat-value text-primary">RS. {totalAmount}</div>
@@ -196,14 +196,17 @@ async function BillTxCard({ account }: { account: PublicKey }) {
       <div className="card-body items-center text-center">
         <div className="space-y-6">
           <h2
-            className="card-title justify-center text-3xl cursor-pointer"
+            className="card-title justify-center text-3xl cursor-pointer font-bold text-primary"
             onClick={() => accountQuery.refetch()}
           >
             <p>Bill Id: {accountQuery.data?.billRefId}</p>
           </h2>
-          <p>Total Amount: {accountQuery.data?.totalAmount}</p>
+          <div className='flex justify-around'>
+            <p className='flex font-bold text-primary'>Total Amount:</p>
+            <p className='font-bold'>${accountQuery.data?.totalAmount}</p>
+          </div>
           <ViewOnlyItemsTable items={accountQuery.data?.items}/>
-          <p>Payment Status: {accountQuery.data?.isPaymentDone?<>Yes</>:<>No</>}</p>
+          <p className='font-bold text-accent'>Payment Status: {accountQuery.data?.isPaymentDone?<>✅ Payment Done</>:<>Pending</>}</p>
           <div className="text-center space-y-4">
             <p>
               <ExplorerLink
@@ -214,7 +217,7 @@ async function BillTxCard({ account }: { account: PublicKey }) {
             {isPaymentDone?(
               <></>
               ):(
-                <QRCode billRefId={billRefId} totalAmount={totalAmount} account= {account} owner={accountQuery.data!.owner}/>
+                <QRCode billRefId={accountQuery.data!.billRefId} totalAmount={(Number(accountQuery.data!.totalAmount)/10000).toString()} account= {account} owner={accountQuery.data!.owner}/>
               )}
             
             <button
@@ -222,7 +225,7 @@ async function BillTxCard({ account }: { account: PublicKey }) {
               onClick={() => {
                 if (
                   !window.confirm(
-                    'Are you sure you want to close this account?'
+                    'Are you sure you want to close this Bil account?'
                   )
                 ) {
                   return;

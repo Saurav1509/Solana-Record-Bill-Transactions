@@ -1,6 +1,7 @@
 import { findReference, FindReferenceError, validateTransfer } from "@solana/pay"
 import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
 import BigNumber from 'bignumber.js';
+import { error } from "console";
 
 export async function validate( reference: PublicKey, totalAmount:string, owner: PublicKey) {
     console.log("finding the transaction")
@@ -26,7 +27,10 @@ export async function validate( reference: PublicKey, totalAmount:string, owner:
          *
          * You can implement a polling strategy to query for the transaction periodically.
          */
+        let intervalCount = 0;
+
         const interval = setInterval(async () => {
+            intervalCount++;
             console.count('Checking for transaction...');
             try {
                 signatureInfo = await findReference(connection, reference, { finality: 'confirmed' });
@@ -38,6 +42,10 @@ export async function validate( reference: PublicKey, totalAmount:string, owner:
                     console.error(error);
                     clearInterval(interval);
                     reject(error);
+                }else if (intervalCount > 30) {
+                    console.log("Reached the maximum number of intervals. Stopping check.");
+                    clearInterval(interval);  // Clear the interval if the count reaches 3
+                    reject(new Error("Transaction not found after 5 mins"));
                 }
             }
         }, 10000);
@@ -61,6 +69,7 @@ export async function validate( reference: PublicKey, totalAmount:string, owner:
 
     return {
         paymentStatus,
+        signature
     }
 
 }
