@@ -12,7 +12,7 @@ export const metadata = {
 const links: { label: string; path: string }[] = [
   // { label: 'Account', path: '/account' },
   // { label: 'Clusters', path: '/clusters' },
-  // { label: 'Bill Transactions', path: '/billTx' },
+  { label: 'Bill Transactions', path: '/billTx' },
 ];
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="coffee">
+    <html lang="en" data-theme="dim">
       <body>
         <ReactQueryProvider>
           <ClusterProvider>
